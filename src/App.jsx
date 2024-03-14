@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 import { marked } from 'marked';
-import DOMPurify from 'dompurify';
 
 function App() {
   const defaultState = `
@@ -32,29 +31,25 @@ function helloWorld() {
 
   const [editor, setEditor] = useState(defaultState);
 
-  useEffect(() => {
-    updatePreview(editor);
-  }, [editor]);
-
-  const updatePreview = (value) => {
-    const sanitizedHtml = DOMPurify.sanitize(marked(value));
-    document.getElementById('preview').innerHTML = sanitizedHtml;
-  };
-
   const handleEditorChange = (event) => {
     setEditor(event.target.value);
   };
 
+  marked.setOptions({ breaks: true });
+
   return (
     <div id="container">
-      <h2>Type some MD format text downhere...</h2>
+      <h1 id="title-1">Type some Markdown format text downhere...</h1>
       <textarea
         id="editor"
         value={editor}
         onChange={handleEditorChange}
       ></textarea>
-      <h2>Markdown previewer</h2>
-      <div id="preview"></div>
+      <h1 id="title-2">Markdown previewer</h1>
+      <div
+        id="preview"
+        dangerouslySetInnerHTML={{ __html: marked(editor) }}
+      ></div>
     </div>
   );
 }
